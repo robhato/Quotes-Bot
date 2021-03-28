@@ -10,7 +10,7 @@ class DbCog(commands.Cog, name='Quotes'):
 
 	@commands.command()
 	async def add_quote(self, ctx, *, quote:str=None):
-		db = sql.connect('main.sqlite')
+		db = sql.connect('main-a.sqlite')
 		cur = db.cursor()
 		try:
 			if quote is None:
@@ -35,14 +35,14 @@ class DbCog(commands.Cog, name='Quotes'):
 
 	@commands.command()
 	async def get_quotes_by_author(self, ctx, *, author:str=None):
-		db = sql.connect('main.sqlite')
+		db = sql.connect('main-a.sqlite')
 		cur = db.cursor()
 		try:
 			if author is None:
 				await ctx.send("Please enter an author's name!")
 			else:
 				a = author.lower()
-				cur.execute('SELECT author FROM quotes WHERE quote = ?', (a,))
+				cur.execute('SELECT quote FROM quotes WHERE author = ?', (a,))
 				quotes = cur.fetchall()
 				clean_quotes = [''.join(i) for i in quotes]
 				res = str(clean_quotes)[1:-1]
@@ -53,14 +53,14 @@ class DbCog(commands.Cog, name='Quotes'):
 
 	@commands.command()
 	async def get_quotes_by_phrase(self, ctx, *, phrase:str=None):
-		db = sql.connect('main.sqlite')
+		db = sql.connect('main-a.sqlite')
 		cur = db.cursor()
 		try:
 			if phrase is None:
 				await ctx.send("Please enter a phrase!")
 			else:
 				p = phrase.lower()
-				cur.execute('SELECT author FROM quotes WHERE author LIKE ?', (f'%{p}%',))
+				cur.execute('SELECT quote FROM quotes WHERE quote LIKE ?', (f'%{p}%',))
 				quotes = cur.fetchall()
 				clean_quotes = [''.join(i) for i in quotes]
 				res = str(clean_quotes)[1:-1]
@@ -71,10 +71,10 @@ class DbCog(commands.Cog, name='Quotes'):
 
 	@commands.command()
 	async def get_all_quotes(self, ctx):
-		db = sql.connect('main.sqlite')
+		db = sql.connect('main-a.sqlite')
 		cur = db.cursor()
 		try:
-			cur.execute('SELECT author FROM quotes ORDER BY author')
+			cur.execute('SELECT quote FROM quotes ORDER BY quote')
 			quotes = cur.fetchall()
 			clean_quotes = [''.join(i) for i in quotes]
 			res = str(clean_quotes)[1:-1]
@@ -85,7 +85,7 @@ class DbCog(commands.Cog, name='Quotes'):
 
 	@commands.command()
 	async def contributions(self, ctx, *, author:str=None):
-		db = sql.connect('main.sqlite')
+		db = sql.connect('main-a.sqlite')
 		cur = db.cursor()
 		try:
 			if author is None:
